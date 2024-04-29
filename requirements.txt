@@ -1,2 +1,4 @@
+numpy
 obspy
-import matplotlib as plt
+matplotlib
+cartopy
