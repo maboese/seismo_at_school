@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
-""" Plot the location map of the selected earthquake """
+""" 
+Plots the location map of the selected earthquake. The event can be 
+reached by the RaspberryShake object, which is the collection of 
+widgets shown in the notebook.
+"""
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from IPython.display import display, clear_output
-import ipywidgets as widgets
 
 def plot_map(raspberry):
-    """ Plot the location map of the selected earthquake """
     # Get the selected earthquake
-    selected = raspberry.get_selected_earthquake()
-    
+    selected_eq  = raspberry.get_earthquake_quakeml()
+    lon = selected_eq.origins[0].longitude
+    lat = selected_eq.origins[0].latitude
+    mag = selected_eq.magnitudes[0].mag
+    depth = selected_eq.origins[0].depth / 1000.0
+    time = selected_eq.origins[0].time
+
     # Make sure the output widget is created
     if raspberry.plot_output is None:
         raise ValueError("The output widget is not created")
@@ -39,6 +46,14 @@ def plot_map(raspberry):
             else:
                 ax.set_extent((-180, 180., -90, 90))
             ax.stock_img()
+
+        # Plot the earthquake location
+        ax.plot(lon, lat, 'ro', markersize=14, transform=ccrs.PlateCarree())
+        ax.text(lon, lat, f"M{mag:.1f}", transform=ccrs.PlateCarree(), fontweight='bold')
+        
+        # Title
+        time = time.strftime("%Y-%m-%d %H:%M:%S")
+        ax.set_title(f"{time}, Depth: {round(depth, 1)} km")
 
         # Draw standard features
         ax.gridlines()

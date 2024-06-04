@@ -173,6 +173,10 @@ class RaspberryShake:
         """ Return the selected earthquake """
         return self.earthquake_combo.value
     
+    def get_earthquake_quakeml(self):
+        idx = self.earthquake_combo.options.index(self.earthquake_combo.value)
+        return self.catalog[idx]
+    
     def get_selected_year(self):
         """ Return the selected year """
         return self.year_combo.value
