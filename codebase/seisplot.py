@@ -127,7 +127,6 @@ def seismogram_plot(raspberry):
         print(f"  Region: {region}")
         print("\n")
 
-        
         # Get the waveforms for raspberry shake and the closest SED station
         stream = get_waveforms(origin_time, timewindow_start, timewindow_end, station_name)
         sed_stream = get_waveforms(origin_time, timewindow_start, timewindow_end, sed_station_name)
