@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from ipywidgets import widgets, interact, Dropdown, Select
 from IPython.display import display
+import importlib
 import numpy as np
 from obspy import UTCDateTime
 from obspy.clients.fdsn import Client
@@ -45,7 +46,36 @@ class RaspberryShake:
     def __init__(self):
         self.stations = config.rs_sta_list
         self.catalog = []
+        self.inventory = None
 
+    def query_stations(self):
+        # SED broadband stations:
+        inv_ch = Client("ETH").get_stations(
+            network="CH", station="*", location="--", channel="HH*", level="RESP")
+        inv_ch = inv_ch.select(
+            channel="*Z", station="*", time=UTCDateTime("2050-01-01T01:00:00.000Z"))
+
+        # Seismo-at-school RaspberryShake stations
+        inv_s = Client("ETH").get_stations(
+            network="S", station="*",location="--", channel="EH*", level="RESP")
+        inv_s = inv_s.select(
+            channel="*Z", station="*", time=UTCDateTime("2050-01-01T01:00:00.000Z"))
+
+        # Combine the inventories
+        self.inventory = inv_ch + inv_s
+
+    def get_CH_inventory(self):
+        """ Return the inventory for Swiss network"""
+        if self.inventory is None:
+            self.query_stations()
+        return self.inventory.select(network="CH")
+    
+    def get_S_inventory(self):
+        """ Return the inventory for seismo-at-school network"""
+        if self.inventory is None:
+            self.query_stations()
+        return self.inventory.select(network="S")
+    
     def query_web_services(self):
         """ Function to query the server with the selected parameters """
         server = self.get_parameters()['server']
@@ -262,10 +292,15 @@ class RaspberryShake:
         # Create an output widget
         self.plot_output = widgets.Output()
 
-    def plot_map(self, event):
+    def plot_map(self, event=None):
         from codebase import mapplot
+        importlib.reload(mapplot)
         mapplot.plot_map(self)
 
+    def display_map(self):
+        """ Displays only the map """
+        display(widgets.HBox([self.plot_output], layout=widgets.Layout(width='100%')))
+        
     def display(self):
         """ Display the widgets """
         query_components = widgets.VBox([
@@ -297,7 +332,7 @@ class RaspberryShake:
 
         # Display the output widget. Span the entire width
         # For this add another cell just below the layout
-        display(widgets.HBox([self.plot_output], layout=widgets.Layout(width='100%')))
+        # display(widgets.HBox([self.plot_output], layout=widgets.Layout(width='100%')))
 
 
 

@@ -48,8 +48,33 @@ def plot_map(raspberry):
             ax.stock_img()
 
         # Plot the earthquake location
-        ax.plot(lon, lat, 'ro', markersize=14, transform=ccrs.PlateCarree())
-        ax.text(lon, lat, f"M{mag:.1f}", transform=ccrs.PlateCarree(), fontweight='bold')
+        ax.plot(lon, lat, 'ro', markersize=14, transform=ccrs.Geodetic())
+        ax.text(lon, lat, f"M{mag:.1f}", transform=ccrs.Geodetic(), fontweight='bold',
+                fontsize=14, verticalalignment='bottom', horizontalalignment='right')
+        
+        # selected station name
+        selected_sta_code = raspberry.get_selected_station().split(',')[0].strip()
+        # Inventory of the RaspberryShake stations
+        inventory = raspberry.get_S_inventory()
+
+        for sta in inventory[0]:
+            x = sta.longitude
+            y = sta.latitude 
+            
+            if sta.code == selected_sta_code:
+                ax.plot(x, y, 'bv', markersize=15, transform=ccrs.Geodetic())
+
+                # Check the region scale to decide if station names should be shown
+                if raspberry.is_region_switzerland():
+                    ax.text(x, y + 0.05, sta.code, transform=ccrs.Geodetic(), 
+                            fontsize=10, verticalalignment='bottom', horizontalalignment='center')
+            else:
+                ax.plot(x, y, 'kv', markersize=12, transform=ccrs.Geodetic(), alpha=0.5)
+
+                # Check the region scale to decide if station names should be shown
+                if raspberry.is_region_switzerland():
+                    ax.text(x, y + 0.05, sta.code, transform=ccrs.Geodetic(), 
+                            fontsize=9, verticalalignment='bottom', horizontalalignment='center')
         
         # Title
         time = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -61,4 +86,6 @@ def plot_map(raspberry):
         ax.set_xlabel('Longitude')
         ax.set_ylabel('Latitude')
     
+        plt.savefig("map.png", dpi=200, bbox_inches='tight')
         plt.show()
+        
