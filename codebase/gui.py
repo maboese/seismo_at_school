@@ -10,6 +10,7 @@ from codebase import config
 # Years that will be used in the dropdown. It cannot excced the current year
 start_year = 2023
 
+# Labels for the widgets
 _labels = {
     'en': {
         'year': 'Year', 
@@ -17,7 +18,8 @@ _labels = {
         'region_values': ['Worldwide', 'Europe', 'Switzerland'],
         'earthquake': 'Earthquakes',
         'raspberry': 'Raspberry',
-        'plotmap': 'Plot Map'},
+        'plotmap': 'Plot event',
+        'plotseis': 'Plot Seismograms'},
            
     'de': {
         'year': 'Jahr', 
@@ -25,7 +27,8 @@ _labels = {
         'region_values': ['Weltweit', 'Europa', 'Schweiz'],
         'earthquake': 'Erdbeben',
         'raspberry': 'Raspberry',
-        'plotmap': 'Karte plotten'}
+        'plotmap': 'Erdbeben plotten',
+        'plotseis': 'Seismogramme plotten'}
 }
 
 
@@ -99,17 +102,25 @@ class RaspberryShake:
             min_lon = -15.0
             max_lon = 30.0
             
-            self.catalog = client.get_events(
-                starttime=start, endtime=end, minmagnitude=min_mag,
-                maxmagnitude=max_mag, minlatitude=min_lat, maxlatitude=max_lat, 
-                minlongitude=min_lon, maxlongitude=max_lon)
+            try:
+                self.catalog = client.get_events(
+                    starttime=start, endtime=end, minmagnitude=min_mag,
+                    maxmagnitude=max_mag, minlatitude=min_lat, maxlatitude=max_lat, 
+                    minlongitude=min_lon, maxlongitude=max_lon)
+            except:
+                self.catalog = []
+
             return self.catalog
         else:
             # The server is ETH for Switzerland, and IRIS for worldwide
             # No need to downscale the region for either case.
-            self.catalog = client.get_events(
-                starttime=start, endtime=end, minmagnitude=min_mag, 
-                maxmagnitude=max_mag)
+            try:
+                self.catalog = client.get_events(
+                    starttime=start, endtime=end, minmagnitude=min_mag, 
+                    maxmagnitude=max_mag)
+            except:
+                self.catalog = []
+                
             return self.catalog
 
     def is_region_switzerland(self):
@@ -199,9 +210,33 @@ class RaspberryShake:
         """ Return the selected station """
         return self.raspberry_combo.value
     
+    def get_sed_station(self):
+        """ Return the inventory of the selected station """
+        rs_code = self.get_selected_station().split(',')[0].strip()
+
+        # Find the station in the dictionary
+        for station in self.stations:
+            if station[0] == rs_code:
+                return station[2]
+        return None
+    
+    def get_sed_station_inventory(self):
+        """ Return the inventory of the selected station """
+        if self.inventory is None:
+            self.query_stations()
+        sta_code = self.get_sed_station()
+        return self.inventory.select(station=sta_code)
+    
     def get_selected_earthquake(self):
         """ Return the selected earthquake """
         return self.earthquake_combo.value
+    
+    def get_selected_station_inventory(self):
+        """ Return the inventory of the selected station """
+        if self.inventory is None:
+            self.query_stations()
+        sta_code = self.get_selected_station().split(',')[0].strip()
+        return self.inventory.select(station=sta_code)
     
     def get_earthquake_quakeml(self):
         idx = self.earthquake_combo.options.index(self.earthquake_combo.value)
@@ -279,28 +314,64 @@ class RaspberryShake:
         # Initial fill of the earthquake list
         self.handle_magnitude_changed({'new': self.magnitude_select.value})
 
+        # Query the inventory
+        self.query_stations()
+
         # Button to plot the location map of the selected earthquake
         self.plot_map_button = widgets.Button(description=_labels[language]['plotmap'],
                                               button_style='danger')
         self.plot_map_button.on_click(self.plot_map)
 
+        # Button to plot the seismograms
+        self.plot_seis_button = widgets.Button(description=_labels[language]['plotseis'],
+                                                button_style='danger')
+        self.plot_seis_button.on_click(self.plot_seismograms)
+
+        # Button to plot all the seismograms 
+        self.plot_all_seis_button = widgets.Button(description='Plot all seismograms',
+                                                    button_style='danger')
+        self.plot_all_seis_button.on_click(self.plot_all_seismograms)
+
         # Connect the signals
         self.year_combo.observe(self.handle_year_changed, names='value')
         self.region_select.observe(self.handle_region_changed, names='value')
         self.magnitude_select.observe(self.handle_magnitude_changed, names='value')
-
+        
         # Create an output widget
         self.plot_output = widgets.Output()
 
+        # Output widget for the seismograms
+        self.seis_output = widgets.Output()
+
     def plot_map(self, event=None):
-        from codebase import mapplot
+        """ Plot the location map """
+        from codebase import mapplot, seisplot
         importlib.reload(mapplot)
+        importlib.reload(seisplot)
+
         mapplot.plot_map(self)
+        seisplot.seismogram_plot(self)
+        
+    def plot_all_seismograms(self, event=None):
+        """ Plot all the seismograms """
+        from codebase import seisallplot
+        importlib.reload(seisallplot)
+        seisallplot.plot_all_seismograms(self)
+
+    def plot_seismograms(self, event=None):
+        """ Plot the seismograms (not the map) """
+        from codebase import seisplot
+        importlib.reload(seisplot)
+        seisplot.seismogram_plot(self)
 
     def display_map(self):
         """ Displays only the map """
         display(widgets.HBox([self.plot_output], layout=widgets.Layout(width='100%')))
         
+    def display_seismograms(self):
+        """ Displays only the seismograms """
+        display(widgets.HBox([self.seis_output], layout=widgets.Layout(width='100%')))
+
     def display(self):
         """ Display the widgets """
         query_components = widgets.VBox([
@@ -313,7 +384,9 @@ class RaspberryShake:
         events = widgets.VBox([
             self.eq_label, 
             self.earthquake_combo,
-            self.plot_map_button
+            self.plot_map_button,
+            # self.plot_seis_button
+            self.plot_all_seis_button,
         ], layout=widgets.Layout(grid_area='events'))
         
         # Use a GridBox to create a 2x2 layout

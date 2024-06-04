@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from IPython.display import display, clear_output
+from obspy.geodetics import gps2dist_azimuth
 
 def plot_map(raspberry):
     # Get the selected earthquake
@@ -18,6 +19,9 @@ def plot_map(raspberry):
     depth = selected_eq.origins[0].depth / 1000.0
     time = selected_eq.origins[0].time
 
+    if depth < 0:
+        depth = 0.0
+        
     # Make sure the output widget is created
     if raspberry.plot_output is None:
         raise ValueError("The output widget is not created")
@@ -62,6 +66,19 @@ def plot_map(raspberry):
             y = sta.latitude 
             
             if sta.code == selected_sta_code:
+                # Draw the GCP from station to earthquake
+                ax.plot([x, lon], [y, lat], 'r--', transform=ccrs.Geodetic())
+
+                # Calculate the distance between the station and the earthquake
+                distance = gps2dist_azimuth(y, x, lat, lon)[0] / 1000.0
+
+                # Text half-way between the station and the earthquake
+                xtext = (x + lon) / 2
+                ytext = (y + lat) / 2
+                ax.text(xtext, ytext, f"{distance:.1f} km", transform=ccrs.Geodetic(), 
+                        fontsize=10, verticalalignment='bottom', horizontalalignment='center')
+                
+                # Mark the selected station
                 ax.plot(x, y, 'bv', markersize=15, transform=ccrs.Geodetic())
 
                 # Check the region scale to decide if station names should be shown
@@ -88,4 +105,4 @@ def plot_map(raspberry):
     
         plt.savefig("map.png", dpi=200, bbox_inches='tight')
         plt.show()
-        
+
