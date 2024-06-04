@@ -12,6 +12,8 @@ from obspy.geodetics import gps2dist_azimuth
 from codebase import config
 
 def plot_all_seismograms(raspberry):
-    print("Plotting all seismograms")
-    with raspberry.plot_output:
+    # Use the seismogram plot output widget.
+    with raspberry.seis_output:
         clear_output()
+
+        

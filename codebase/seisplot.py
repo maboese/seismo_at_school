@@ -12,17 +12,20 @@ from obspy.clients.fdsn import Client
 from obspy.geodetics import gps2dist_azimuth
 from codebase import config
 
-def predict_arrivals(station_lon, station_lat, event_lon, event_lat, event_depth_in_km, phase):
+def predict_arrivals(station_lon, station_lat, event_lon, event_lat, event_depth_in_km, phase_list):
     """
     Predicts the phase arrivals for the given earthquake and station parameters.
     """
+    if not isinstance(phase_list, list):
+        phase_list = [phase_list]
+
     model = TauPyModel(model="iasp91")
     distance, _, _ = gps2dist_azimuth(station_lat, station_lon, 
                                       event_lat, event_lon)
     distance = distance / 1000.0
     arrivals = model.get_travel_times(source_depth_in_km=event_depth_in_km,
                                       distance_in_degree=distance/111.0,
-                                      phase_list=[phase])
+                                      phase_list=phase_list)
     return arrivals
 
 
@@ -72,7 +75,8 @@ def plot_three_component_seismogram(stream, axZ, axN, axE):
 def plot_phase(axes, phase_time, color, phase_name):
     """ Plots the predicted phase arrival time on the given axes. """
     for ax in axes:
-        ax.axvline(phase_time, color=color, linestyle='--', lw=2)
+        ax.axvline(phase_time, color=color, linestyle='--', lw=2,
+                   label=f"{phase_name}")
         
 def seismogram_plot(raspberry):
     """ Plots the waveform of the selected earthquake at the selected station """
@@ -148,26 +152,28 @@ def seismogram_plot(raspberry):
             distance = gps2dist_azimuth(station_lat, station_lon, event_lat, event_lon)[0]
             print(f"Distance between the event and the station {station_name}: {distance/1000:.1f} km")
 
-            # Predict the P and S arrivals
-            if distance <= 110:
-                p_phase, s_phase = 'p', 's'
-            else:
-                p_phase, s_phase = 'P', 'S'
+            # Predict the P and S arrivals. The first arriving P/S will be 
+            # determined from the list returned by the TauPyModel
+            p_phases = ['p', 'Pg', 'Pn' , 'PmP', 'P', 'PP', 'Pdiff']
+            s_phases = ['s', 'Sg', 'Sn' , 'SmS', 'S', 'SS', 'Sdiff']
 
             P_arrival = predict_arrivals(
-                station_lon, station_lat, event_lon, event_lat, depth_in_km, p_phase)
+                station_lon, station_lat, event_lon, event_lat, depth_in_km, p_phases)
             S_arrival = predict_arrivals(
-                station_lon, station_lat, event_lon, event_lat, depth_in_km, s_phase)
+                station_lon, station_lat, event_lon, event_lat, depth_in_km, s_phases)
                 
+            P_arrival.sort(key=lambda x: x.time)
+            S_arrival.sort(key=lambda x: x.time)
+            
             if P_arrival is not None and len(P_arrival) > 0:
-                print(f"P arrival at {station_name}: {round(P_arrival[0].time, 2)} s")
+                print(f"{P_arrival[0].name} arrival at {station_name}: {round(P_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + P_arrival[0].time,
                            color='tab:red', phase_name='P')
             else:
                 print(f"P arrival at {station_name}: No prediction available")
 
             if S_arrival is not None and len(S_arrival) > 0:
-                print(f"S arrival at {station_name}: {round(S_arrival[0].time, 2)} s")
+                print(f"{S_arrival[0].name} arrival at {station_name}: {round(S_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + S_arrival[0].time,
                            color='tab:blue', phase_name='S')
             else:
@@ -206,28 +212,29 @@ def seismogram_plot(raspberry):
             print(f"Distance between the event and the station {sed_station_name}: {distance/1000:.1f} km")
 
             # Predict the P and S arrivals
-            if distance <= 110:
-                p_phase, s_phase = 'p', 's'
-            else:
-                p_phase, s_phase = 'P', 'S'
+            p_phases = ['p', 'Pg', 'Pn' , 'PmP', 'P', 'PP', 'Pdiff']
+            s_phases = ['s', 'Sg', 'Sn' , 'SmS', 'S', 'SS', 'Sdiff']
 
             P_arrival = predict_arrivals(
-                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, p_phase)
+                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, p_phases)
             S_arrival = predict_arrivals(
-                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, s_phase)
+                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, s_phases)
+            
+            P_arrival.sort(key=lambda x: x.time)
+            S_arrival.sort(key=lambda x: x.time)
             
             if P_arrival is not None and len(P_arrival) > 0:
-                print(f"P arrival at {sed_station_name}: {round(P_arrival[0].time, 2)} s")
+                print(f"{P_arrival[0].name} arrival at {station_name}: {round(P_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + P_arrival[0].time, 
-                           color='tab:red', phase_name='P')
+                           color='tab:red', phase_name=P_arrival[0].name)
             
             else:
                 print(f"P arrival at {sed_station_name}: No prediction available")
 
             if S_arrival is not None and len(S_arrival) > 0:
-                print(f"S arrival at {sed_station_name}: {round(S_arrival[0].time, 2)} s")
+                print(f"{S_arrival[0].name} arrival at {station_name}: {round(S_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + S_arrival[0].time, 
-                           color="tab:blue", phase_name='S')
+                           color="tab:blue", phase_name=S_arrival[0].name)
             else:
                 print(f"S arrival at {sed_station_name}: No prediction available")
 
