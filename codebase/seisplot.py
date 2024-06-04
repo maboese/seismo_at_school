@@ -154,17 +154,14 @@ def seismogram_plot(raspberry):
 
             # Predict the P and S arrivals. The first arriving P/S will be 
             # determined from the list returned by the TauPyModel
-            p_phases = ['p', 'Pg', 'Pn' , 'PmP', 'P', 'PP', 'Pdiff']
-            s_phases = ['s', 'Sg', 'Sn' , 'SmS', 'S', 'SS', 'Sdiff']
-
             P_arrival = predict_arrivals(
-                station_lon, station_lat, event_lon, event_lat, depth_in_km, p_phases)
+                station_lon, station_lat, event_lon, event_lat, depth_in_km, config.p_phases)
             S_arrival = predict_arrivals(
-                station_lon, station_lat, event_lon, event_lat, depth_in_km, s_phases)
+                station_lon, station_lat, event_lon, event_lat, depth_in_km, config.s_phases)
                 
             P_arrival.sort(key=lambda x: x.time)
             S_arrival.sort(key=lambda x: x.time)
-            
+
             if P_arrival is not None and len(P_arrival) > 0:
                 print(f"{P_arrival[0].name} arrival at {station_name}: {round(P_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + P_arrival[0].time,
@@ -216,9 +213,9 @@ def seismogram_plot(raspberry):
             s_phases = ['s', 'Sg', 'Sn' , 'SmS', 'S', 'SS', 'Sdiff']
 
             P_arrival = predict_arrivals(
-                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, p_phases)
+                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, config.p_phases)
             S_arrival = predict_arrivals(
-                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, s_phases)
+                sed_lon, sed_lat, event_lon, event_lat, depth_in_km, config.s_phases)
             
             P_arrival.sort(key=lambda x: x.time)
             S_arrival.sort(key=lambda x: x.time)

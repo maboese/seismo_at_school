@@ -30,6 +30,11 @@ regions = {
                     }
 }
 
+
+# Phases to be plotted for the seismograms
+p_phases = ['p', 'Pg', 'Pn', 'PmP', 'P', 'PP', 'PKP', 'Pdiff']
+s_phases = ['s', 'Sg', 'Sn', 'SmS', 'S', 'SS', 'SKS', 'Sdiff']
+
 # RaspberryShake station list
 rs_sta_list =[
 ["GBIEL","S8C09", "CHASS","GBIEL, Gymnasium Biel-Seeland Biel"],
