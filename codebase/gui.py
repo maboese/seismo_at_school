@@ -416,7 +416,7 @@ class RaspberryShake:
             events,
         ], layout=widgets.Layout(
             width='100%',
-            grid_template_columns='50% 50%',
+            grid_template_columns='35% auto',
             grid_template_rows='auto auto',
             grid_template_areas='''
             "query events"
