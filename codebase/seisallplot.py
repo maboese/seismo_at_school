@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """ 
-Plots vertical seismogram from all stations for the selected earthquake.
+Plots vertical component seismograms from all stations 
+for the selected earthquake.
 """
 import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
+import numpy as np
 from IPython.display import display, clear_output
 import obspy
 from obspy.taup import TauPyModel
@@ -62,6 +62,7 @@ def plot_all_seismograms(raspberry):
         labels = []
         dist_labels = []
         label_locs = []
+        peak_amplitudes = []
 
         # Loop over the networks
         for net_idx, network in enumerate(networks_to_plot):
@@ -99,8 +100,9 @@ def plot_all_seismograms(raspberry):
                         # Add the trace to the list
                         traces.append(tr)
                         distances.append(distance)
+                        peak_amplitudes.append(max(abs(tr.data)))
                         dist_labels.append(round(distance, 1))
-                        labels.append(f"{station_name} ({network})")
+                        labels.append(f"{network}.{station_name}")
                         label_locs.append(distance)
                 except Exception as e:
                     pass
@@ -108,19 +110,32 @@ def plot_all_seismograms(raspberry):
         print("")
         print(f"Number of seismograms: {len(traces)}")
 
+        if len(traces) == 0:
+            print("No seismograms found for the selected earthquake.")
+            return
+        
         # Plot the seismograms at their respective distances. The amplitudes
-        # are normalized to the maximum amplitude.
+        # are normalized to the maximum amplitude of each trace similar to
+        # obspy section plot. It is also possible to plot the seismograms with
+        # relative amplitudes normalized with the maximum of the peak amplitudes.
         fig, ax = plt.subplots(figsize=(10, 12))
 
         for idx, trace in enumerate(traces):
             net = trace.stats.network
 
-            ax.plot(tr.times(), 5 * trace.data / max(trace.data) + distances[idx],  
-                    color=network_colors[net], label=labels[idx], linewidth=0.5, 
-                    alpha=0.8)
+            # Plot with individually scaled amplitudes
+            ax.plot(tr.times(), 5 * trace.data / max(abs(trace.data)) + distances[idx],
+                    color=network_colors[net], label=labels[idx], linewidth=0.25,
+                    alpha=0.5)
+
+            # # Plot with relative amplitudes with respect to the maximum peak amplitude
+            # ax.plot(tr.times(), 50 * trace.data / max(peak_amplitudes) + distances[idx],  
+            #         color=network_colors[net], label=labels[idx], linewidth=0.5, 
+            #         alpha=0.8)
+            
             
             # Plot the station names right-hand side of the seismograms outside the plot area
-            ax.text(timewindow_end + 10, distances[idx], labels[idx], 
+            ax.text(timewindow_end + 1, distances[idx], labels[idx], 
                     fontsize=8,  verticalalignment='center', 
                     horizontalalignment='left', color=network_colors[net], 
                     clip_on=False)
@@ -130,7 +145,7 @@ def plot_all_seismograms(raspberry):
         s = []
         p_dist = []
         s_dist = []
-        for d in distances:
+        for d in distances + [max(distances) + 50]:
             # P-wave arrival
             arrivals = model.get_ray_paths(
                 source_depth_in_km=depth, 
@@ -156,13 +171,34 @@ def plot_all_seismograms(raspberry):
         ax.plot(p, p_dist, color='red', label='P', linewidth=2.0, linestyle=':')
         ax.plot(s, s_dist, color='blue', label='S', linewidth=2.0, linestyle=':') 
 
-        ax.set_title(f"Seismograms for the earthquake at {origin_time} (M{mag:.1f}, {depth:.1f} km)")
+        ax.set_title(f"Seismograms for the earthquake at {origin_time} (M{mag:.1f}, depth {depth:.1f} km)")
         ax.set_xlabel("Time [s]")
         ax.set_ylabel("Distance [km]")
         ax.grid(axis='x', linestyle=':', linewidth=0.5)
+        ax.set_xlim(0, timewindow_end)
+        ax.set_ylim(0, max(distances) + 50)
 
         if len(traces) > 0:
+            plt.savefig('waveform_section.png', dpi=200, bbox_inches='tight')
             plt.show()
 
+
+        # Distance vs. amplitude plot. Use it a try-except block to catch any errors 
+        # and to avoid empty figures shown in the notebook.
+        try:
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.scatter(dist_labels, np.asarray(peak_amplitudes) * 100, color='tab:cyan',
+                       edgecolors='black', s=40)
+            ax.set_xlabel("Distance [km]")
+            ax.set_ylabel("Peak amplitude [cm/s]")
+            ax.set_title("Distance vs. peak amplitude")
+            ax.grid(axis='both', linestyle=':', linewidth=0.5, which='both')
+            ax.set_yscale('log')
+            ax.set_xscale('log')
+            plt.savefig('distance_vs_amplitude.png', dpi=200, bbox_inches='tight')
+            plt.show()
+        except Exception as e:
+            print("Error plotting distance vs. amplitude:", e)
+            pass
               
 

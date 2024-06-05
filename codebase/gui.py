@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ipywidgets import widgets, interact, Dropdown, Select
-from IPython.display import display
+from IPython.display import display, clear_output
 import importlib
 import numpy as np
 from obspy import UTCDateTime
@@ -322,6 +322,10 @@ class RaspberryShake:
                                               button_style='danger')
         self.plot_map_button.on_click(self.plot_map)
 
+        # Button to clear the map
+        self.clear_map_button = widgets.Button(description='Clear map')
+        self.clear_map_button.on_click(self.clear_map)
+
         # Button to plot the seismograms
         self.plot_seis_button = widgets.Button(description=_labels[language]['plotseis'],
                                                 button_style='danger')
@@ -331,6 +335,11 @@ class RaspberryShake:
         self.plot_all_seis_button = widgets.Button(description='Plot all seismograms',
                                                     button_style='danger')
         self.plot_all_seis_button.on_click(self.plot_all_seismograms)
+
+        # Button for ray paths
+        self.plot_ray_button = widgets.Button(description='Plot ray paths',
+                                              button_style='danger')
+        self.plot_ray_button.on_click(self.plot_ray_paths)
 
         # Connect the signals
         self.year_combo.observe(self.handle_year_changed, names='value')
@@ -343,6 +352,16 @@ class RaspberryShake:
         # Output widget for the seismograms
         self.seis_output = widgets.Output()
 
+    def plot_ray_paths(self, event=None):
+        """ Plot the ray paths """
+        from codebase import raypathplot
+        importlib.reload(raypathplot)
+        raypathplot.plot_ray_paths(self)
+
+    def clear_map(self, event=None):
+        with self.plot_output:
+            clear_output(wait=True)
+            
     def plot_map(self, event=None):
         """ Plot the location map """
         from codebase import mapplot, seisplot
@@ -385,8 +404,10 @@ class RaspberryShake:
             self.eq_label, 
             self.earthquake_combo,
             self.plot_map_button,
-            # self.plot_seis_button
+            # self.clear_map_button,
+            # self.plot_seis_button,
             self.plot_all_seis_button,
+            self.plot_ray_button
         ], layout=widgets.Layout(grid_area='events'))
         
         # Use a GridBox to create a 2x2 layout
