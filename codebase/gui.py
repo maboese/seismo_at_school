@@ -19,7 +19,9 @@ _labels = {
         'earthquake': 'Earthquakes',
         'raspberry': 'Raspberry',
         'plotmap': 'Plot event',
-        'plotseis': 'Plot Seismograms'},
+        'plotseis': 'Plot seismograms',
+        'plotallseis': 'Plot all seismograms',
+        'plotraypaths': 'Plot ray paths'},
            
     'de': {
         'year': 'Jahr', 
@@ -28,7 +30,9 @@ _labels = {
         'earthquake': 'Erdbeben',
         'raspberry': 'Raspberry',
         'plotmap': 'Erdbeben plotten',
-        'plotseis': 'Seismogramme plotten'}
+        'plotseis': 'Seismogramme plotten',
+        'plotallseis': 'Alle Seismogramme plotten',
+        'plotraypaths': 'Strahlenweg plotten'}
 }
 
 
@@ -50,7 +54,12 @@ class RaspberryShake:
         self.stations = config.rs_sta_list
         self.catalog = []
         self.inventory = None
+        self.language = 'en'
 
+    def get_language(self):
+        """ Return the current language """
+        return self.language
+    
     def query_stations(self):
         # SED broadband stations:
         inv_ch = Client("ETH").get_stations(
@@ -283,6 +292,11 @@ class RaspberryShake:
         if language not in _labels.keys():
             raise ValueError(f"Language {language} is not supported. Use 'en' or 'de'.")
 
+        # Set the language
+        self.language = language
+
+        print(f"Displaying the GUI. Please wait...", end='\r')
+
         # Widget labels depending on the language
         _year_label = _labels[language]['year']
         _region_label = _labels[language]['region']
@@ -332,12 +346,12 @@ class RaspberryShake:
         self.plot_seis_button.on_click(self.plot_seismograms)
 
         # Button to plot all the seismograms 
-        self.plot_all_seis_button = widgets.Button(description='Plot all seismograms',
+        self.plot_all_seis_button = widgets.Button(description=_labels[language]['plotallseis'],
                                                     button_style='danger')
         self.plot_all_seis_button.on_click(self.plot_all_seismograms)
 
         # Button for ray paths
-        self.plot_ray_button = widgets.Button(description='Plot ray paths',
+        self.plot_ray_button = widgets.Button(description=_labels[language]['plotraypaths'],
                                               button_style='danger')
         self.plot_ray_button.on_click(self.plot_ray_paths)
 

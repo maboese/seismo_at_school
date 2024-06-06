@@ -176,7 +176,10 @@ def plot_all_seismograms(raspberry):
         ax.set_ylabel("Distance [km]")
         ax.grid(axis='x', linestyle=':', linewidth=0.5)
         ax.set_xlim(0, timewindow_end)
-        ax.set_ylim(0, max(distances) + 50)
+
+        # Set the y-axis limits if the region scale is Switzerland
+        if raspberry.is_region_switzerland():
+            ax.set_ylim(0, max(distances) + 50)
 
         if len(traces) > 0:
             plt.savefig('waveform_section.png', dpi=200, bbox_inches='tight')
