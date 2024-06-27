@@ -171,9 +171,9 @@ def plot_all_seismograms(raspberry):
         ax.plot(p, p_dist, color='red', label='P', linewidth=2.0, linestyle=':')
         ax.plot(s, s_dist, color='blue', label='S', linewidth=2.0, linestyle=':') 
 
-        ax.set_title(f"Seismograms for the earthquake at {origin_time} (M{mag:.1f}, depth {depth:.1f} km)")
-        ax.set_xlabel("Time [s]")
-        ax.set_ylabel("Distance [km]")
+        ax.set_title(f"{origin_time} (M{mag:.1f}, Z= {depth:.1f} km)")
+        ax.set_xlabel("Time/Zeit [s]")
+        ax.set_ylabel("Distance/Entfernung [km]")
         ax.grid(axis='x', linestyle=':', linewidth=0.5)
         ax.set_xlim(0, timewindow_end)
 
