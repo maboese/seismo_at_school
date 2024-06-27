@@ -3,3 +3,6 @@ obspy
 matplotlib
 cartopy
 ipywidgets
+jupyter
+requests
+
