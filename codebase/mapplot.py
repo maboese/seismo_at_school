@@ -95,7 +95,7 @@ def plot_map(raspberry):
         
         # Title
         time = time.strftime("%Y-%m-%d %H:%M:%S")
-        ax.set_title(f"{time}, Depth: {round(depth, 1)} km")
+        ax.set_title(f"{time}, Z= {round(depth, 1)} km")
 
         # Draw standard features
         ax.gridlines()
