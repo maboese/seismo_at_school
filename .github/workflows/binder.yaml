@@ -29,7 +29,8 @@ jobs:
       env:
         MYBINDERORG_CACHE: true
       run: |
+        IMAGE_TAG="distribution"
         # Build the Docker image locally from the Dockerfile
-        docker build -t savasceylan/seismo_at_school:latest .
+        docker build -t savasceylan/seismo_at_school:$IMAGE_TAG .
         # Push the Docker image to Docker Hub
-        docker push savasceylan/seismo_at_school:latest
+        docker push savasceylan/seismo_at_school:$IMAGE_TAG
