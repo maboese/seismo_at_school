@@ -25,15 +25,11 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Install repo2docker
-      run: |
-        python -m pip install --upgrade pip
-        pip install jupyter-repo2docker
-
-    - name: Build and push Docker image to Binder cache and Docker Hub
+    - name: Build and push Docker image
       env:
         MYBINDERORG_CACHE: true
       run: |
-        jupyter-repo2docker --no-run --user-name jovyan --user-id 1000 --image-name savasceylan/seismo_at_school .
+        # Build the Docker image locally from the Dockerfile
         docker build -t savasceylan/seismo_at_school:latest .
+        # Push the Docker image to Docker Hub
         docker push savasceylan/seismo_at_school:latest
