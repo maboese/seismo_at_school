@@ -1,1 +1,1 @@
-FROM savasceylan/seismo_at_school:latest
+FROM savasceylan/seismo_at_school:2fd32f8d0a78
