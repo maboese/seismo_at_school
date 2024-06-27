@@ -179,7 +179,7 @@ def seismogram_plot(raspberry):
             # Set the x-limit to the time window
             axZ.set_xlim(origin_time + timewindow_start, origin_time + timewindow_end)
 
-            plt.savefig('RaspberryShake_seismogram.png', dpi=200, bbox_inches='tight')
+            plt.savefig("S.{station_name}_seismogram.png", dpi=200, bbox_inches='tight')
             plt.show()
             
         else:
@@ -237,7 +237,7 @@ def seismogram_plot(raspberry):
             # Set the x-limit to the time window
             axZ.set_xlim(origin_time + timewindow_start, origin_time + timewindow_end)
 
-            plt.savefig('SED_seismogram.png', dpi=200, bbox_inches='tight')
+            plt.savefig("CH.{station_name}_seismogram.png", dpi=200, bbox_inches='tight')
             plt.show()
 
         else:
