@@ -18,10 +18,10 @@ _labels = {
         'region_values': ['Worldwide', 'Europe', 'Switzerland'],
         'earthquake': 'Earthquakes',
         'raspberry': 'Raspberry',
-        'plotmap': 'Plot event',
-        'plotseis': 'Plot seismograms',
-        'plotallseis': 'Plot all seismograms',
-        'plotraypaths': 'Plot ray paths'},
+        'plotmap': 'Map',
+        'plotseis': 'Seismogram',
+        'plotallseis': 'All seismograms',
+        'plotraypaths': 'Ray paths'},
            
     'de': {
         'year': 'Jahr', 
@@ -29,10 +29,10 @@ _labels = {
         'region_values': ['Weltweit', 'Europa', 'Schweiz'],
         'earthquake': 'Erdbeben',
         'raspberry': 'Raspberry',
-        'plotmap': 'Erdbeben plotten',
-        'plotseis': 'Seismogramme plotten',
-        'plotallseis': 'Alle Seismogramme plotten',
-        'plotraypaths': 'Strahlenweg plotten'}
+        'plotmap': 'Karte',
+        'plotseis': 'Seismogramm',
+        'plotallseis': 'Alle Seismogramme',
+        'plotraypaths': 'Wellenausbreitung'}
 }
 
 
