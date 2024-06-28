@@ -1,5 +1,7 @@
-numpy
+numpy==1.26.0
 obspy
 matplotlib
 cartopy
 ipywidgets
+requests
+
