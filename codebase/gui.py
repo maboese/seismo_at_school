@@ -29,7 +29,7 @@ _labels = {
         'region_values': ['Weltweit', 'Europa', 'Schweiz'],
         'earthquake': 'Erdbeben',
         'raspberry': 'Raspberry',
-        'plotmap': 'Karte',
+        'plotmap': 'Karte & Seismogramm',
         'plotseis': 'Seismogramm',
         'plotallseis': 'Alle Seismogramme',
         'plotraypaths': 'Wellenausbreitung'}
