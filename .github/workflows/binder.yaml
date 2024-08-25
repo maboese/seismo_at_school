@@ -31,6 +31,6 @@ jobs:
       run: |
         IMAGE_TAG="distribution"
         # Build the Docker image locally from the Dockerfile
-        docker build -t savasceylan/seismo_at_school:$IMAGE_TAG .
+        docker build -t seismoatschool/seismo_at_school:$IMAGE_TAG .
         # Push the Docker image to Docker Hub
-        docker push savasceylan/seismo_at_school:$IMAGE_TAG
+        docker push seismoatschool/seismo_at_school:$IMAGE_TAG

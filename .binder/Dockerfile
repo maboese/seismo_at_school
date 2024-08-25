@@ -1,1 +1,1 @@
-FROM savasceylan/seismo_at_school:distribution
+FROM seismoatschool/seismo_at_school:distribution
