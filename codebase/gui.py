@@ -295,7 +295,7 @@ class RaspberryShake:
         # Set the language
         self.language = language
 
-        print(f"Displaying the GUI. Please wait...", end='\r')
+        print(f"Preparing the GUI. Please wait...", end='\r')
 
         # Widget labels depending on the language
         _year_label = _labels[language]['year']
@@ -365,6 +365,8 @@ class RaspberryShake:
 
         # Output widget for the seismograms
         self.seis_output = widgets.Output()
+
+        print(f"GUI is ready. Run the next cell to show it, if haven't already used 'Run all cells' command.")
 
     def plot_ray_paths(self, event=None):
         """ Plot the ray paths """
