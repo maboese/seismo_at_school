@@ -2,13 +2,13 @@
 FROM ubuntu:22.04
 
 # Update and install Python, pip, and other necessary packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
     wget \
     git \
     tini \
-    && apt-get clean
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add a user id with 1000. 
 ARG NB_USER=jovyan
