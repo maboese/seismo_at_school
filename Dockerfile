@@ -37,7 +37,7 @@ ENV PATH="/usr/local/bin:/home/jovyan/.local/bin/:${PATH}"
 EXPOSE 8888
 
 # Install Jupyter and other Python dependencies
-RUN python3 -m pip install --no-cache-dir notebook jupyterlab
+# RUN python3 -m pip install --no-cache-dir notebook jupyterlab
 
 # Install dependencies specified in requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt

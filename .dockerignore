@@ -1,0 +1,19 @@
+# Ignore Python compiled files
+*.pyc
+*.pyo
+
+# Ignore Python cache files
+__pycache__/
+codebase/__pycache__/
+
+# Ignore Git directory
+.git
+.github
+
+# Ignore Docker files
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Ignore the binder directory
+.binder
