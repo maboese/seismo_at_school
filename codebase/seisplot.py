@@ -56,18 +56,33 @@ def plot_three_component_seismogram(stream, axZ, axN, axE):
             axZ.plot(tr.times("matplotlib"), tr.data, label=tr.stats.channel,
                     color='black', lw=1, alpha=0.7)
             axZ.xaxis_date()
+
+            # Enable both major and minor grids
+            axZ.minorticks_on()
+            axZ.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axZ.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
             
         elif tr.stats.channel[-1] == 'N':
             axN.plot(tr.times("matplotlib"), tr.data, label=tr.stats.channel,
                     color='black', lw=1, alpha=0.7)
             axN.xaxis_date()
             
+            # Enable both major and minor grids
+            axN.minorticks_on()
+            axN.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axN.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
+    
         else:
             axE.plot(tr.times("matplotlib"), tr.data, label=tr.stats.channel,
                     color='black', lw=1, alpha=0.7)
             axE.xaxis_date()
             axE.set_ylabel('Velocity [m/s]')
             axE.set_xlabel('Time [UTC]')
+
+            # Enable both major and minor grids
+            axE.minorticks_on()
+            axE.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axE.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
 
     for ax in [axZ, axN, axE]:
         ax.legend(loc='upper right')
