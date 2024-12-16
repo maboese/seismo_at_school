@@ -235,7 +235,7 @@ def seismogram_plot(raspberry):
             S_arrival.sort(key=lambda x: x.time)
             
             if P_arrival is not None and len(P_arrival) > 0:
-                print(f"{P_arrival[0].name} arrival at {station_name}: {round(P_arrival[0].time, 2)} s")
+                print(f"{P_arrival[0].name} arrival at {sed_station_name}: {round(P_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + P_arrival[0].time, 
                            color='tab:red', phase_name=P_arrival[0].name)
             
@@ -243,7 +243,7 @@ def seismogram_plot(raspberry):
                 print(f"P arrival at {sed_station_name}: No prediction available")
 
             if S_arrival is not None and len(S_arrival) > 0:
-                print(f"{S_arrival[0].name} arrival at {station_name}: {round(S_arrival[0].time, 2)} s")
+                print(f"{S_arrival[0].name} arrival at {sed_station_name}: {round(S_arrival[0].time, 2)} s")
                 plot_phase(axes=[axZ, axN, axE], phase_time=origin_time + S_arrival[0].time, 
                            color="tab:blue", phase_name=S_arrival[0].name)
             else:
