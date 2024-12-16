@@ -59,7 +59,7 @@ def plot_three_component_seismogram(stream, axZ, axN, axE):
 
             # Enable both major and minor grids
             axZ.minorticks_on()
-            axZ.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axZ.grid(True, which='major', axis='x', linestyle='-', linewidth=0.5)
             axZ.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
             
         elif tr.stats.channel[-1] == 'N':
@@ -69,7 +69,7 @@ def plot_three_component_seismogram(stream, axZ, axN, axE):
             
             # Enable both major and minor grids
             axN.minorticks_on()
-            axN.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axN.grid(True, which='major', axis='x', linestyle='-', linewidth=0.5)
             axN.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
     
         else:
@@ -81,7 +81,7 @@ def plot_three_component_seismogram(stream, axZ, axN, axE):
 
             # Enable both major and minor grids
             axE.minorticks_on()
-            axE.grid(True, which='major', axis='x', linestyle='--', linewidth=0.5)
+            axE.grid(True, which='major', axis='x', linestyle='-', linewidth=0.5)
             axE.grid(True, which='minor', axis='x', linestyle='--', linewidth=0.5)  # Denser grid for minor            
 
     for ax in [axZ, axN, axE]:
