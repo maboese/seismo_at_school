@@ -7,7 +7,7 @@ from obspy import UTCDateTime
 from obspy.clients.fdsn import Client
 from codebase import config
 
-# Years that will be used in the dropdown. It cannot excced the current year
+# Years that will be used in the dropdown. It cannot exceed the current year
 start_year = 2023
 
 # Labels for the widgets
@@ -305,6 +305,8 @@ class RaspberryShake:
 
         # Dropdown for year
         years = [str(i) for i in range(start_year, UTCDateTime().year + 1)]
+        # Reverse the list to have the latest year on top
+        years.reverse()
         self.year_combo = Dropdown(options=[str(i) for i in years], description=_year_label)
 
         # List box for region
