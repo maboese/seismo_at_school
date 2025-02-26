@@ -8,7 +8,7 @@ from obspy.clients.fdsn import Client
 from codebase import config
 
 # Years that will be used in the dropdown. It cannot excced the current year
-start_year = 2024
+start_year = 2023
 
 # Labels for the widgets
 _labels = {
