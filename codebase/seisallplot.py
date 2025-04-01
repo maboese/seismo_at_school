@@ -124,12 +124,12 @@ def plot_all_seismograms(raspberry):
             net = trace.stats.network
 
             # Plot with individually scaled amplitudes
-            ax.plot(tr.times(), 5 * trace.data / max(abs(trace.data)) + distances[idx],
+            ax.plot(trace.times(), 5 * trace.data / max(abs(trace.data)) + distances[idx],
                     color=network_colors[net], label=labels[idx], linewidth=0.25,
                     alpha=0.5)
 
             # # Plot with relative amplitudes with respect to the maximum peak amplitude
-            # ax.plot(tr.times(), 50 * trace.data / max(peak_amplitudes) + distances[idx],  
+            # ax.plot(trace.times(), 50 * trace.data / max(peak_amplitudes) + distances[idx],  
             #         color=network_colors[net], label=labels[idx], linewidth=0.5, 
             #         alpha=0.8)
             
