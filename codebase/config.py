@@ -46,6 +46,7 @@ rs_sta_list =[
 ["KSENZ","RD3C4","ZUR","KSENZ, KS Enge Zürich"],
 ["KSHOZ","RE5E7", "ZUR","KSHOZ, KS Hottingen Zürich"],
 ["KSKNZ","RC23B", "ZUR","KSKNZ, KS Küsnacht"],
+["KSKRZ","REDCB", "SKRK","KSKRZ, KS Kreuzlingen"],    
 ["KSROM","R58D2", "WALHA","KSROM, KS Romanshorn"],
 ["KSRYC","RF726", "WILA","KSRYC, KS Rychenberg Winterthur"],
 ["KSSO","RFE6B", "MOUTI","KSSO, KS Solothurn"],
