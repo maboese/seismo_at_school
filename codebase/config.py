@@ -37,11 +37,13 @@ s_phases = ['s', 'Sg', 'Sn', 'SmS', 'S', 'SS', 'SKS', 'Sdiff']
 
 # RaspberryShake station list
 rs_sta_list =[
+["GBERN","R476D", "WOLEN", "GBERN, Gymnasium Neufeld, Bern"],   
 ["GBIEL","S8C09", "CHASS","GBIEL, Gymnasium Biel-Seeland Biel"],
 ["GLSTL","RDFB5", "MUTEZ","GLSTL, Gymnasium Liestal"],
 ["GOBWL","RDFB5","MUTEZ","GOBWL, Gymnasium Oberwil"],
 ["GOBZL","R19BB", "BALST","GOBZL, Gymnasium Oberaargau"],
 ["GUSTZ","R4335", "ZUR","GUSTZ, Gymnasium Unterstrass"],
+["KSBRG","R7D70", "FIESA","KSBRG, Kollegium Spiritus Sanctus, Brig"],    
 ["KSCHR","RB22F", "PLONS","KSCHR, Bündner KS Chur"],
 ["KSENZ","RD3C4","ZUR","KSENZ, KS Enge Zürich"],
 ["KSHOZ","RE5E7", "ZUR","KSHOZ, KS Hottingen Zürich"],
