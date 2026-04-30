@@ -37,7 +37,7 @@ s_phases = ['s', 'Sg', 'Sn', 'SmS', 'S', 'SS', 'SKS', 'Sdiff']
 
 # RaspberryShake station list
 rs_sta_list =[
-["GBERN","R476D", "WOLEN", "GBERN, Gymnasium Neufeld, Bern"],   
+["GBERN","R476D", "WOLEN", "GBERN, Gymnasium Neufeld, Bern"],
 ["GBIEL","S8C09", "CHASS","GBIEL, Gymnasium Biel-Seeland Biel"],
 ["GLSTL","RDFB5", "MUTEZ","GLSTL, Gymnasium Liestal"],
 ["GOBWL","RDFB5","MUTEZ","GOBWL, Gymnasium Oberwil"],
@@ -48,11 +48,11 @@ rs_sta_list =[
 ["KSENZ","RD3C4","ZUR","KSENZ, KS Enge Zürich"],
 ["KSHOZ","RE5E7", "ZUR","KSHOZ, KS Hottingen Zürich"],
 ["KSKNZ","RC23B", "ZUR","KSKNZ, KS Küsnacht"],
-["KSKRZ","REDCB", "SKRK","KSKRZ, KS Kreuzlingen"],    
+["KSKRZ","REDCB", "SKRK","KSKRZ, KS Kreuzlingen"],  
 ["KSROM","R58D2", "WALHA","KSROM, KS Romanshorn"],
 ["KSRYC","RF726", "WILA","KSRYC, KS Rychenberg Winterthur"],
 ["KSSO","RFE6B", "MOUTI","KSSO, KS Solothurn"],
-["KSSTG","R103E", "LIENZ","KSSTG, KS St. Gallen"],    
+["KSSTG","R103E", "LIENZ","KSSTG, KS St. Gallen"],   
 ["KSURI","R8F49", "MUO","KSURI, KS Uri"],
 ["KSWAT","R4AF0", "","KSWAT, KS Wattwil"],
 ["KSZOW","RF726", "WILA","KSZOW, KS Zürcher Oberland, Wetzikon"],
